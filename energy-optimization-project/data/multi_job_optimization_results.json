@@ -1,0 +1,94 @@
+{
+  "status": "Optimal",
+  "jobs_in_batch": 60,
+  "naive_cost_inr": 9348.68,
+  "greedy_unconstrained_cost_inr": 6631.19,
+  "greedy_capacity_violations": 4,
+  "greedy_overload_detail": {
+    "Press/Night": 649.6,
+    "CNC/Night": 1024.5,
+    "Welding/Night": 1400.4,
+    "Lathe/Night": 733.6
+  },
+  "constrained_optimal_cost_inr": 7946.9,
+  "savings_vs_naive_inr": 1401.78,
+  "savings_vs_naive_percent": 14.99,
+  "gap_vs_unconstrained_ideal_inr": 1315.71,
+  "station_utilization": {
+    "Press/Morning": {
+      "minutes_used": 642.6,
+      "capacity_minutes": 960,
+      "utilization_percent": 66.9
+    },
+    "Press/Evening": {
+      "minutes_used": 0,
+      "capacity_minutes": 960,
+      "utilization_percent": 0.0
+    },
+    "Press/Night": {
+      "minutes_used": 957.5,
+      "capacity_minutes": 960,
+      "utilization_percent": 99.7
+    },
+    "Lathe/Morning": {
+      "minutes_used": 735.6,
+      "capacity_minutes": 960,
+      "utilization_percent": 76.6
+    },
+    "Lathe/Evening": {
+      "minutes_used": 0,
+      "capacity_minutes": 960,
+      "utilization_percent": 0.0
+    },
+    "Lathe/Night": {
+      "minutes_used": 955.9,
+      "capacity_minutes": 960,
+      "utilization_percent": 99.6
+    },
+    "CNC/Morning": {
+      "minutes_used": 947.7,
+      "capacity_minutes": 960,
+      "utilization_percent": 98.7
+    },
+    "CNC/Evening": {
+      "minutes_used": 70.5,
+      "capacity_minutes": 960,
+      "utilization_percent": 7.3
+    },
+    "CNC/Night": {
+      "minutes_used": 956.7,
+      "capacity_minutes": 960,
+      "utilization_percent": 99.7
+    },
+    "Welding/Morning": {
+      "minutes_used": 959.8,
+      "capacity_minutes": 960,
+      "utilization_percent": 100.0
+    },
+    "Welding/Evening": {
+      "minutes_used": 432.5,
+      "capacity_minutes": 960,
+      "utilization_percent": 45.1
+    },
+    "Welding/Night": {
+      "minutes_used": 952.0,
+      "capacity_minutes": 960,
+      "utilization_percent": 99.2
+    },
+    "Assembly/Morning": {
+      "minutes_used": 0,
+      "capacity_minutes": 1440,
+      "utilization_percent": 0.0
+    },
+    "Assembly/Evening": {
+      "minutes_used": 0,
+      "capacity_minutes": 1440,
+      "utilization_percent": 0.0
+    },
+    "Assembly/Night": {
+      "minutes_used": 706.3,
+      "capacity_minutes": 1440,
+      "utilization_percent": 49.0
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "strategy_comparison": {
+    "naive": {
+      "total_energy_kwh": 35487.0,
+      "total_cost_inr": 279688.73,
+      "total_co2_kg": 25408.7
+    },
+    "cost_optimal (deployed optimizer)": {
+      "total_energy_kwh": 35902.4,
+      "total_cost_inr": 197463.32,
+      "total_co2_kg": 25706.1,
+      "cost_savings_vs_naive_percent": 29.4,
+      "co2_change_vs_naive_percent": 1.2
+    },
+    "energy_optimal (alternative objective)": {
+      "total_energy_kwh": 35186.5,
+      "total_cost_inr": 279953.56,
+      "total_co2_kg": 25193.6,
+      "cost_change_vs_naive_percent": 0.1,
+      "co2_savings_vs_naive_percent": 0.8
+    }
+  },
+  "key_finding": "Minimizing cost and minimizing energy/CO2 are DIFFERENT objectives. Night-shift tariffs are cheapest but production runs slower at night, so the cost-optimal schedule actually INCREASES total energy use and CO2 emissions slightly, even as it cuts cost substantially. An energy/CO2-optimal schedule instead favors the fastest shift (Morning), cutting emissions but missing out on most of the cost savings. A real deployment would need to choose a weighted objective balancing both."
+}

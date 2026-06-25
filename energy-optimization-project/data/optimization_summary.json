@@ -1,0 +1,8 @@
+{
+  "jobs_simulated": 500,
+  "jobs_with_cost_reduction": 414,
+  "total_original_cost_inr": 279688.58,
+  "total_optimized_cost_inr": 197463.3,
+  "total_savings_inr": 82225.28,
+  "percent_cost_reduction": 29.4
+}

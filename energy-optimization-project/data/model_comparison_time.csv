@@ -1,0 +1,6 @@
+model,R2,MAE,RMSE,train_time_sec,predict_time_sec
+Gradient Boosting,0.9865,29.168,42.323,1.418,0.0089
+XGBoost,0.9852,30.94,44.26,2.018,0.0128
+Random Forest,0.9787,36.07,53.135,0.594,0.1026
+Decision Tree,0.9592,49.8,73.589,0.034,0.006
+Linear Regression,0.9117,80.988,108.241,0.046,0.006
