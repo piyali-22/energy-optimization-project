@@ -1,133 +1,220 @@
-# Energy Consumption Optimization Through Predicted Production Time
+# ⚡ Energy Consumption Optimization Through Predicted Production Time
 
-An ML pipeline that predicts how long a manufacturing job will take, predicts
-the energy it will consume, and recommends the cheapest shift to run it on —
-cutting energy costs without changing production capacity.
+**An ML pipeline that predicts manufacturing job duration and energy use, then recommends the cheapest time to run it — built end-to-end with real trained models, a real backend, and a real deployed app.**
 
-## Problem
+🔗 **[Live App](https://energy-optimization-project-bfghxayxb.vercel.app)** · 🔌 **[Live API Docs](https://energy-optimization-project.onrender.com/docs)** · 📦 **[This Repo](https://github.com/piyali-22/energy-optimization-project)**
 
-Factories schedule jobs without considering time-of-day electricity tariffs.
-If we can accurately *predict* a job's production time, we can predict its
-energy footprint and shift it into a cheaper tariff window — saving cost with
-zero change to what's actually produced.
+> Internship project — Tata Motors Passenger Vehicles, Sanand, Ahmedabad
 
-## Pipeline
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white)
+![Status](https://img.shields.io/badge/status-deployed-success)
+
+---
+
+## 📸 Preview
+
+![Dashboard preview](plots/dashboard_preview.png)
+*(Add a screenshot of your live dashboard here — see [Adding a screenshot](#adding-a-screenshot) below)*
+
+---
+
+## The Problem
+
+Manufacturing plants schedule jobs without knowing in advance how long each job will take or how much electricity it will consume — so there's no way to plan production around cheaper electricity hours. Electricity tariffs vary significantly by time of day (peak vs. off-peak), but without a way to *predict* a job's energy footprint before it runs, that pricing difference can't be exploited.
+
+**This project closes that gap**: predict → estimate cost → recommend the cheapest feasible time slot — without changing what's actually produced.
+
+---
+
+## How It Works
 
 ```
-Job details (machine, product, quantity, material, shift, etc.)
+Job details (station, vehicle, batch size, material, operator, shift...)
         │
         ▼
-[Model 1] Production Time Predictor (RandomForestRegressor)
-        │  → predicted production_time_min
-        ▼
-[Model 2] Energy Consumption Predictor (RandomForestRegressor)
-        │  → predicted energy_kwh
-        ▼
-[Optimizer] Simulates Morning / Evening / Night shifts,
-            applies time-of-day tariff, picks the cheapest option
-        │
-        ▼
-Recommended shift + cost savings vs. original schedule
+┌───────────────────────┐
+│  Model 1: Time         │   RandomForestRegressor → predicted production time (min)
+│  R² = 0.979            │
+└───────────┬───────────┘
+            │ (predicted time feeds into Model 2)
+            ▼
+┌───────────────────────┐
+│  Model 2: Energy       │   RandomForestRegressor → predicted energy (kWh)
+│  R² = 0.996            │
+└───────────┬───────────┘
+            │
+            ▼
+┌───────────────────────┐
+│  Optimizer              │   Simulates Morning / Evening / Night tariffs,
+│                          │   recommends the cheapest feasible shift
+└───────────┬───────────┘
+            │
+            ▼
+  FastAPI backend  ──────▶  React dashboard (live, deployed)
 ```
 
-## Dataset
+---
 
-Synthetic dataset of 4,000 production jobs (`data/production_data.csv`),
-generated with domain-realistic formulas — not random noise. Features:
-machine type, product type, material, quantity, operator experience,
-setup complexity, machine age, ambient temperature, shift, day of week.
-Targets: production time (minutes), energy consumed (kWh).
+## Headline Results
 
-*(Synthetic data is standard practice for a project like this when real
-factory logs aren't available — the pipeline works identically on real data.)*
-
-## Results
-
-**Production Time Model**
 | Metric | Value |
 |---|---|
-| R² | 0.979 |
-| MAE | 36.1 minutes |
-| MAPE | 7.7% |
+| Production time model accuracy | **R² = 0.979** (MAPE 7.7%) |
+| Energy model accuracy | **R² = 0.996** (MAE 2.67 kWh) |
+| Naive per-job optimization | **29.4% cost reduction** (₹82,225 saved / 500 jobs) |
+| **Capacity-constrained optimization (realistic)** | **15% cost reduction — fully feasible**, respecting real station/shift capacity |
+| Cost-optimal vs. emissions-optimal trade-off | Cost-optimal schedule cuts cost 29.4% but *increases* CO2 by ~1.2% — quantified explicitly, not hidden |
 
-**Energy Consumption Model**
-| Metric | Value |
-|---|---|
-| R² | 0.996 |
-| MAE | 2.67 kWh |
+> **Why two different savings numbers?** The 29.4% figure comes from optimizing each job independently, which can recommend overloading a station beyond real capacity — it's a theoretical ceiling, not an achievable schedule. The 15% figure comes from solving a proper constrained optimization problem (linear programming via PuLP) across an entire day's batch, respecting real capacity limits. **The 15% number is the one that's actually deployable.**
 
-**Schedule Optimization** (simulated on 500 jobs)
-| Metric | Value |
-|---|---|
-| Jobs with cost reduction | 414 / 500 (82.8%) |
-| Total cost reduction | **29.4%** |
-| Total savings | ₹82,225 (on ₹2,79,689 baseline) |
+---
 
-## Files
+## Features
 
-- `generate_dataset.py` — synthetic data generator
-- `train_model.py` — production time model + evaluation plots
-- `train_energy_model.py` — energy consumption model
-- `optimize_schedule.py` — shift optimization engine
-- `data/production_data.csv` — dataset
-- `data/optimization_results.csv` — per-job optimization recommendations
-- `models/` — trained model files (.pkl) + metrics
-- `plots/` — actual vs predicted, feature importance
+- 🔮 **Two chained ML models** — energy prediction uses the time model's own output as an input feature
+- ⚙️ **Per-job shift optimizer** — simulates a job across all 3 shifts, recommends the cheapest
+- 🏭 **Constrained multi-job optimizer** — solves a real Mixed-Integer Linear Program (PuLP/CBC) to schedule an entire batch of jobs within real station capacity limits
+- 📊 **5-algorithm model comparison** — Linear Regression, Decision Tree, Random Forest, Gradient Boosting, XGBoost, benchmarked on identical data
+- 🌱 **Cost vs. CO2 trade-off analysis** — quantifies where minimizing electricity cost and minimizing emissions actually conflict
+- 🔍 **SHAP explainability** — every prediction can be broken down feature-by-feature, not a black box
+- 🌐 **Real full-stack deployment** — FastAPI backend (Render) + React frontend (Vercel), not a notebook demo
+
+---
 
 ## Tech Stack
 
-Python, pandas, scikit-learn (RandomForestRegressor), matplotlib
+| Layer | Tools |
+|---|---|
+| ML / Data | Python, pandas, scikit-learn, XGBoost, SHAP |
+| Optimization | PuLP (CBC solver) |
+| Backend | FastAPI, Pydantic, uvicorn |
+| Frontend | React (Vite), Recharts, lucide-react |
+| Deployment | Render (backend) · Vercel (frontend) |
+
+---
 
 ## Project Structure
 
 ```
 energy-optimization-project/
-├── generate_dataset.py        # synthetic data generator
-├── train_model.py             # production time model + plots
-├── train_energy_model.py      # energy consumption model
-├── optimize_schedule.py       # batch optimization script
-├── data/                      # dataset + optimization results
-├── models/                    # trained .pkl files + metrics
-├── plots/                     # evaluation plots
-├── backend/                   # FastAPI app serving the real models
-│   ├── main.py
-│   ├── models/, data/         # copies the API loads at runtime
-│   └── requirements.txt
-└── frontend/                  # React app, calls the real backend
-    ├── src/App.jsx
-    └── package.json
+├── generate_dataset.py          # synthetic data generator (4,000 jobs)
+├── train_model.py                # production time model + evaluation plots
+├── train_energy_model.py         # energy consumption model
+├── optimize_schedule.py          # per-job shift optimizer
+├── multi_job_optimizer.py        # constrained MILP optimizer (PuLP)
+├── model_comparison.py           # 5-algorithm benchmark
+├── co2_tradeoff.py                # cost vs. emissions trade-off analysis
+├── shap_explainability.py        # SHAP plots for model interpretability
+│
+├── data/                          # dataset + all computed results (CSV/JSON)
+├── models/                        # trained .pkl models + metrics
+├── plots/                         # all generated charts
+│
+├── backend/                       # FastAPI app (deployed on Render)
+│   └── main.py
+└── frontend/                      # React app (deployed on Vercel)
+    └── src/App.jsx
 ```
 
-## Running the full stack
+---
 
+## Running It Yourself
+
+### 1. Clone the repo
 ```bash
-# Terminal 1 — backend
+git clone https://github.com/piyali-22/energy-optimization-project.git
+cd energy-optimization-project
+```
+
+### 2. Backend
+```bash
 cd backend
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
+```
+Visit `http://localhost:8000/docs` for interactive API docs.
 
-# Terminal 2 — frontend
+### 3. Frontend
+```bash
 cd frontend
 npm install
 npm run dev
 ```
+Visit `http://localhost:3000`.
 
-Open http://localhost:3000 — every number you see comes from a real
-HTTP call to the real trained models, not a formula or mock data.
+### 4. Re-run any analysis script
+```bash
+python multi_job_optimizer.py      # constrained optimization
+python model_comparison.py          # 5-algorithm benchmark
+python co2_tradeoff.py              # cost vs. CO2 analysis
+python shap_explainability.py       # explainability plots
+```
 
-## Status
+---
 
-| Layer | Status |
-|---|---|
-| Dataset | Real synthetic data, domain-realistic formulas |
-| Production time model | Trained, R²=0.979 |
-| Energy model | Trained, R²=0.996 |
-| Optimizer | Tested, 29.4% cost reduction on 500 jobs |
-| Backend API | Built, tested, serving real predictions |
-| Frontend | Built, calls the real backend (no mock data) |
+## Methodology
 
-## Next Steps (optional polish)
+### Dataset
+4,000 synthetic-but-realistic job records, generated using domain-reasonable formulas (not random noise) — station type, vehicle model, batch size, material, operator experience, machine age, ambient temperature, shift, and day of week, with production time and energy consumption derived from physically sensible relationships (e.g. larger batches and harder materials take longer; experienced operators are faster; older machines run slower; night shifts run ~8% slower due to fatigue).
 
-- Deploy backend to Render/Railway, frontend to Vercel — fully live demo
-- PostgreSQL to log real job history over time instead of static CSVs
-- Auth — not needed for this internal tool, skip it
+> Synthetic data was used because, as an intern, real plant production logs weren't accessible. The pipeline is fully reusable on real data — the same code, models, and optimizer would simply need retraining.
+
+### Model Comparison
+
+| Model | Time R² | Energy R² |
+|---|---|---|
+| **Gradient Boosting** | 0.987 | 0.996 |
+| XGBoost | 0.985 | 0.996 |
+| **Random Forest (deployed)** | 0.979 | 0.996 |
+| Decision Tree | 0.960 | 0.990 |
+| Linear Regression | 0.912 | 0.954 |
+
+Random Forest is deployed; Gradient Boosting scored marginally higher and is documented here as a planned next step rather than hidden.
+
+### Constrained Optimization
+A simple per-job optimizer can recommend overloading a station beyond what an 8-hour shift can physically handle. `multi_job_optimizer.py` solves a proper Mixed-Integer Linear Program — minimizing total cost across an entire batch of jobs, subject to real per-station, per-shift capacity constraints — using PuLP's CBC solver.
+
+### Cost vs. CO2 Trade-off
+Night-shift electricity is the cheapest tariff, but production runs ~8% slower at night (fatigue factor) — meaning jobs consume *slightly more* energy when shifted to chase the cheap price. `co2_tradeoff.py` quantifies this explicitly: the cost-optimal schedule cuts cost 29.4% but increases CO2 emissions ~1.2%, while an energy-optimal alternative cuts emissions ~0.8% but barely saves any cost. **Minimizing cost and minimizing emissions are different objectives** — a real deployment would need a weighted balance of both.
+
+### Explainability (SHAP)
+`shap_explainability.py` generates global feature-importance plots and per-job waterfall breakdowns, showing exactly which features (and by how much) drove any individual prediction — batch quantity dominates, consistent with physical intuition.
+
+---
+
+## Limitations & Honest Caveats
+
+- Dataset is synthetic, not real plant data (no access as an intern)
+- Tariff rates and grid emission factor are representative illustrative values, not live utility figures
+- The free-tier backend (Render) spins down after 15 minutes of inactivity — first request after idling takes ~50 seconds to wake up
+- Capacity assumptions (machines per station, shift length) are illustrative, not the plant's actual configuration
+
+---
+
+## Future Improvements
+
+- Retrain on real plant production logs if/when available
+- Switch deployed model to Gradient Boosting (marginally higher accuracy, confirmed via benchmark)
+- Add a weighted multi-objective optimizer balancing cost *and* CO2 explicitly
+- Persistent database (PostgreSQL) instead of static CSVs for real job history logging
+
+---
+
+## Adding a Screenshot
+
+To complete the preview at the top of this README:
+1. Take a screenshot of your live dashboard
+2. Save it as `plots/dashboard_preview.png` in this repo
+3. Commit and push — it'll render automatically above
+
+---
+
+## Author
+
+**Piyali** — B.Tech CSE, VIT Chennai
+Built during an internship at Tata Motors Passenger Vehicles, Sanand, Ahmedabad.
+
+[GitHub](https://github.com/piyali-22) · [LinkedIn](#)
