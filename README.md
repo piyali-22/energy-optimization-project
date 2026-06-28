@@ -1,6 +1,6 @@
 # ⚡ Energy Consumption Optimization Through Predicted Production Time
 
-**An ML pipeline that predicts manufacturing job duration and energy use, then recommends the cheapest time to run it — built end-to-end with real trained models, a real backend, and a real deployed app.**
+**An ML pipeline that predicts manufacturing job duration and energy use, then recommends the cheapest time to run it, built end-to-end with real trained models, a real backend, and a real deployed app.**
 
 🔗 **[Live App](https://energy-optimization-project.vercel.app)** · 🔌 **[Live API Docs](https://energy-optimization-project.onrender.com/docs)** · 📦 **[This Repo](https://github.com/piyali-22/energy-optimization-project)**
 
@@ -43,7 +43,7 @@
 
 ## The Problem
 
-Manufacturing plants schedule jobs without knowing in advance how long each job will take or how much electricity it will consume — so there's no way to plan production around cheaper electricity hours. Electricity tariffs vary significantly by time of day (peak vs. off-peak), but without a way to *predict* a job's energy footprint before it runs, that pricing difference can't be exploited.
+Manufacturing plants schedule jobs without knowing in advance how long each job will take or how much electricity it will consume ,so there's no way to plan production around cheaper electricity hours. Electricity tariffs vary significantly by time of day (peak vs. off-peak), but without a way to *predict* a job's energy footprint before it runs, that pricing difference can't be exploited.
 
 **This project closes that gap**: predict → estimate cost → recommend the cheapest feasible time slot — without changing what's actually produced.
 
@@ -88,7 +88,7 @@ Job details (station, vehicle, batch size, material, operator, shift...)
 | **Capacity-constrained optimization (realistic)** | **15% cost reduction — fully feasible**, respecting real station/shift capacity |
 | Cost-optimal vs. emissions-optimal trade-off | Cost-optimal schedule cuts cost 29.4% but *increases* CO2 by ~1.2% — quantified explicitly, not hidden |
 
-> **Why two different savings numbers?** The 29.4% figure comes from optimizing each job independently, which can recommend overloading a station beyond real capacity — it's a theoretical ceiling, not an achievable schedule. The 15% figure comes from solving a proper constrained optimization problem (linear programming via PuLP) across an entire day's batch, respecting real capacity limits. **The 15% number is the one that's actually deployable.**
+> **Why two different savings numbers?** The 29.4% figure comes from optimizing each job independently, which can recommend overloading a station beyond real capacity ,it's a theoretical ceiling, not an achievable schedule. The 15% figure comes from solving a proper constrained optimization problem (linear programming via PuLP) across an entire day's batch, respecting real capacity limits. **The 15% number is the one that's actually deployable.**
 
 ---
 
@@ -178,7 +178,7 @@ python shap_explainability.py       # explainability plots
 ## Methodology
 
 ### Dataset
-4,000 synthetic-but-realistic job records, generated using domain-reasonable formulas (not random noise) — station type, vehicle model, batch size, material, operator experience, machine age, ambient temperature, shift, and day of week, with production time and energy consumption derived from physically sensible relationships (e.g. larger batches and harder materials take longer; experienced operators are faster; older machines run slower; night shifts run ~8% slower due to fatigue).
+4,000 synthetic-but-realistic job records, generated using domain-reasonable formulas (not random noise) ,station type, vehicle model, batch size, material, operator experience, machine age, ambient temperature, shift, and day of week, with production time and energy consumption derived from physically sensible relationships (e.g. larger batches and harder materials take longer; experienced operators are faster; older machines run slower; night shifts run ~8% slower due to fatigue).
 
 > Synthetic data was used because, as an intern, real plant production logs weren't accessible. The pipeline is fully reusable on real data — the same code, models, and optimizer would simply need retraining.
 
@@ -195,13 +195,13 @@ python shap_explainability.py       # explainability plots
 Random Forest is deployed; Gradient Boosting scored marginally higher and is documented here as a planned next step rather than hidden.
 
 ### Constrained Optimization
-A simple per-job optimizer can recommend overloading a station beyond what an 8-hour shift can physically handle. `multi_job_optimizer.py` solves a proper Mixed-Integer Linear Program — minimizing total cost across an entire batch of jobs, subject to real per-station, per-shift capacity constraints — using PuLP's CBC solver.
+A simple per-job optimizer can recommend overloading a station beyond what an 8-hour shift can physically handle. `multi_job_optimizer.py` solves a proper Mixed-Integer Linear Program , minimizing total cost across an entire batch of jobs, subject to real per-station, per-shift capacity constraints — using PuLP's CBC solver.
 
 ### Cost vs. CO2 Trade-off
-Night-shift electricity is the cheapest tariff, but production runs ~8% slower at night (fatigue factor) — meaning jobs consume *slightly more* energy when shifted to chase the cheap price. `co2_tradeoff.py` quantifies this explicitly: the cost-optimal schedule cuts cost 29.4% but increases CO2 emissions ~1.2%, while an energy-optimal alternative cuts emissions ~0.8% but barely saves any cost. **Minimizing cost and minimizing emissions are different objectives** — a real deployment would need a weighted balance of both.
+Night-shift electricity is the cheapest tariff, but production runs ~8% slower at night (fatigue factor) , meaning jobs consume *slightly more* energy when shifted to chase the cheap price. `co2_tradeoff.py` quantifies this explicitly: the cost-optimal schedule cuts cost 29.4% but increases CO2 emissions ~1.2%, while an energy-optimal alternative cuts emissions ~0.8% but barely saves any cost. **Minimizing cost and minimizing emissions are different objectives** — a real deployment would need a weighted balance of both.
 
 ### Explainability (SHAP)
-`shap_explainability.py` generates global feature-importance plots and per-job waterfall breakdowns, showing exactly which features (and by how much) drove any individual prediction — batch quantity dominates, consistent with physical intuition.
+`shap_explainability.py` generates global feature-importance plots and per-job waterfall breakdowns, showing exactly which features (and by how much) drove any individual prediction , batch quantity dominates, consistent with physical intuition.
 
 ---
 
@@ -209,7 +209,7 @@ Night-shift electricity is the cheapest tariff, but production runs ~8% slower a
 
 - Dataset is synthetic, not real plant data (no access as an intern)
 - Tariff rates and grid emission factor are representative illustrative values, not live utility figures
-- The free-tier backend (Render) spins down after 15 minutes of inactivity — first request after idling takes ~50 seconds to wake up
+- The free-tier backend (Render) spins down after 15 minutes of inactivity , first request after idling takes ~50 seconds to wake up
 - Capacity assumptions (machines per station, shift length) are illustrative, not the plant's actual configuration
 
 ---
@@ -225,7 +225,7 @@ Night-shift electricity is the cheapest tariff, but production runs ~8% slower a
 
 ## Built By
 
-**Piyali** and **Vanshika Deswal**
+**Piyali Khaitan** and **Vanshika Deswal**
 Built as an internship project at Tata Motors Passenger Vehicles, Sanand, Ahmedabad.
 
 [GitHub](https://github.com/piyali-22)
