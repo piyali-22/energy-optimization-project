@@ -2,22 +2,42 @@
 
 **An ML pipeline that predicts manufacturing job duration and energy use, then recommends the cheapest time to run it — built end-to-end with real trained models, a real backend, and a real deployed app.**
 
-🔗 **[Live App](https://energy-optimization-project-bfghxayxb.vercel.app)** · 🔌 **[Live API Docs](https://energy-optimization-project.onrender.com/docs)** · 📦 **[This Repo](https://github.com/piyali-22/energy-optimization-project)**
-
-> Internship project — Tata Motors Passenger Vehicles, Sanand, Ahmedabad
+🔗 **[Live App](https://energy-optimization-project.vercel.app)** · 🔌 **[Live API Docs](https://energy-optimization-project.onrender.com/docs)** · 📦 **[This Repo](https://github.com/piyali-22/energy-optimization-project)**
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?logo=fastapi&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white)
 ![Status](https://img.shields.io/badge/status-deployed-success)
+![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 ---
 
-## 📸 Preview
+## 📸 Screenshots
 
-![Dashboard preview](plots/dashboard_preview.png)
-*(Add a screenshot of your live dashboard here — see [Adding a screenshot](#adding-a-screenshot) below)*
+**Dashboard Overview & Live Optimizer**
+![Dashboard overview](plots/dashboard_preview.png)
+
+**Predicted Result & Cost vs. Sustainability Trade-off**
+![CO2 trade-off section](plots/dashboard_co2.png)
+
+**Optimization Log — Real Jobs Re-scheduled**
+![Optimization log table](plots/dashboard_log.png)
+
+---
+
+## Table of Contents
+
+- [The Problem](#the-problem)
+- [How It Works](#how-it-works)
+- [Headline Results](#headline-results)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Project Structure](#project-structure)
+- [Running It Yourself](#running-it-yourself)
+- [Methodology](#methodology)
+- [Limitations & Honest Caveats](#limitations--honest-caveats)
+- [Future Improvements](#future-improvements)
 
 ---
 
@@ -36,19 +56,19 @@ Job details (station, vehicle, batch size, material, operator, shift...)
         │
         ▼
 ┌───────────────────────┐
-│  Model 1: Time         │   RandomForestRegressor → predicted production time (min)
-│  R² = 0.979            │
+│  Model 1: Time          │   RandomForestRegressor → predicted production time (min)
+│  R² = 0.979             │
 └───────────┬───────────┘
             │ (predicted time feeds into Model 2)
             ▼
 ┌───────────────────────┐
-│  Model 2: Energy       │   RandomForestRegressor → predicted energy (kWh)
-│  R² = 0.996            │
+│  Model 2: Energy        │   RandomForestRegressor → predicted energy (kWh)
+│  R² = 0.996             │
 └───────────┬───────────┘
             │
             ▼
 ┌───────────────────────┐
-│  Optimizer              │   Simulates Morning / Evening / Night tariffs,
+│  Optimizer               │   Simulates Morning / Evening / Night tariffs,
 │                          │   recommends the cheapest feasible shift
 └───────────┬───────────┘
             │
@@ -111,7 +131,7 @@ energy-optimization-project/
 │
 ├── data/                          # dataset + all computed results (CSV/JSON)
 ├── models/                        # trained .pkl models + metrics
-├── plots/                         # all generated charts
+├── plots/                         # all generated charts + screenshots
 │
 ├── backend/                       # FastAPI app (deployed on Render)
 │   └── main.py
@@ -203,18 +223,9 @@ Night-shift electricity is the cheapest tariff, but production runs ~8% slower a
 
 ---
 
-## Adding a Screenshot
+## Built By
 
-To complete the preview at the top of this README:
-1. Take a screenshot of your live dashboard
-2. Save it as `plots/dashboard_preview.png` in this repo
-3. Commit and push — it'll render automatically above
+**Piyali** and **Vanshika Deswal**
+Built as an internship project at Tata Motors Passenger Vehicles, Sanand, Ahmedabad.
 
----
-
-## Author
-
-**Piyali** — B.Tech CSE, VIT Chennai
-Built during an internship at Tata Motors Passenger Vehicles, Sanand, Ahmedabad.
-
-[GitHub](https://github.com/piyali-22) · [LinkedIn](#)
+[GitHub](https://github.com/piyali-22)
